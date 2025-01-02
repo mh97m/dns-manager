@@ -84,6 +84,16 @@ configure_network() {
       echo -e "${RED}Failed to enable auto-DNS for ${BLUE}${BOLD}$connection${RESET_COLOR}"
       echo "Reason: $(nmcli con show "$connection" 2>&1)"
     fi
+
+    # Enable IPv6 if not disabled
+    if ! $DISABLE_IPV6; then
+      if nmcli con mod "$connection" ipv6.method "auto"; then
+        echo -e "${PURPLE}IPv6 enabled for ${BLUE}${BOLD}$connection${RESET_COLOR}"
+      else
+        echo -e "${RED}Failed to enable IPv6 for ${BLUE}${BOLD}$connection${RESET_COLOR}"
+        echo "Reason: $(nmcli con show "$connection" 2>&1)"
+      fi
+    fi
   fi
 
   # Disable IPv6 if requested
